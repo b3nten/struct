@@ -1,0 +1,45 @@
+# Local
+.npm
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.cache
+.local
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+*.iws
+*.project
+*.classpath
+*.settings/
+*.xcodeproj
+xcuserdata/
+project.xcworkspace
+nbproject/
+build/
+dist/
+*.sublime-workspace
+.atom/
+*.tm_properties
