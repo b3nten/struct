@@ -1,6 +1,11 @@
+import { VStruct } from "./vstruct.ts";
+
 const IS_UNION = Symbol("is_union");
 const IS_OPTIONAL = Symbol("is_optional");
 const IS_NULLABLE = Symbol("is_nullable");
+const IS_ANY = Symbol("is_any");
+const IS_UNKNOWN = Symbol("is_unknown");
+const IS_NEVER = Symbol("is_never");
 
 type Nullable<T> = {
   [IS_NULLABLE]: true;
@@ -17,6 +22,18 @@ type Union<T extends any[]> = {
   types: T;
 };
 
+type Any = {
+  [IS_ANY]: true;
+};
+
+type Unknown = {
+  [IS_UNKNOWN]: true;
+};
+
+type Never = {
+  [IS_NEVER]: true;
+};
+
 export type SchemaPrimitives =
   | string
   | number
@@ -24,7 +41,7 @@ export type SchemaPrimitives =
   | bigint
   | undefined
   | null
-  | symbol
+  | symbol;
 
 type SchemaTypeConstructors =
   | StringConstructor
@@ -49,19 +66,23 @@ type SchemaTypeConstructors =
   | Int32ArrayConstructor
   | Uint32ArrayConstructor
   | Float32ArrayConstructor
-  | Float64ArrayConstructor
+  | Float64ArrayConstructor;
 
-
-export type Schema = {
-  [key: string | number]:
-    | SchemaPrimitives
-    | SchemaTypeConstructors
-    | Schema
-    | Schema[];
-} & any
+export type Schema =
+  | {
+    [key: string | number]:
+      | SchemaPrimitives
+      | SchemaTypeConstructors
+      | Schema
+      | Schema[];
+  }
+  | SchemaPrimitives
+  | SchemaTypeConstructors
+  | Schema[];
 
 type OptionalKeys<T> = {
-  [K in keyof T]: T[K] extends Optional<any> ? K : never;
+  [K in keyof T]: T[K] extends Optional<any> ? K
+    : T[K] extends Never ? K : never;
 }[keyof T];
 
 type NonOptional<T> = Exclude<keyof T, OptionalKeys<T>>;
@@ -73,6 +94,9 @@ export type SchemaToInferredTypes<T> = T extends StringConstructor ? string
     ? SchemaToInferredTypes<U> | null | undefined | void
   : T extends Optional<infer U> ? SchemaToInferredTypes<U>
   : T extends Union<infer U> ? SchemaToInferredTypes<U[number]>
+  : T extends Any ? any
+  : T extends Unknown ? unknown
+  : T extends Never ? never
   : T extends Array<infer U> ? SchemaToInferredTypes<U>[]
   : T extends Record<string | number | symbol, any> ? MapSchemaTypes<T>
   : T;
@@ -90,7 +114,7 @@ export type InferSchemaType<T extends Schema> = MapSchemaTypes<T>;
 const proxyCache = new WeakMap();
 export function createDeepOnChangeProxy<T>(
   target: T,
-  schema: object,
+  schema: Schema,
   quiet = false,
 ) {
   //@ts-ignore
@@ -148,12 +172,12 @@ const schemaConstructorMap = {
 };
 
 export function createSchema<T extends Schema>(schema: T): T {
-  return schema 
+  return schema;
 }
 
 export function isSchemaPrimitive(input: unknown): input is SchemaPrimitives {
   return typeof input === "string" || typeof input === "number" ||
-    typeof input === "boolean" || typeof input === "bigint"
+    typeof input === "boolean" || typeof input === "bigint";
 }
 
 export function isNull(input: unknown): input is null {
@@ -174,6 +198,18 @@ function isOptionalHelper(input: unknown): input is Optional<unknown> {
 
 function isUnionHelper(input: unknown): input is Union<unknown[]> {
   return typeof input === "object" && input !== null && IS_UNION in input;
+}
+
+export function isAny(input: unknown): input is Any {
+  return typeof input === "object" && input !== null && IS_ANY in input;
+}
+
+export function isUnknown(input: unknown): input is Unknown {
+  return typeof input === "object" && input !== null && IS_UNKNOWN in input;
+}
+
+export function isNever(input: unknown): input is Never {
+  return typeof input === "object" && input !== null && IS_NEVER in input;
 }
 
 export function isArray(input: unknown): input is unknown[] {
@@ -205,10 +241,24 @@ export function Union<T extends any[]>(...types: T) {
   } as Union<T>;
 }
 
+export const Any: Any = {
+  [IS_ANY]: true,
+};
+
+export const Unknown: Unknown = {
+  [IS_UNKNOWN]: true,
+};
+
+export const Never: Never = {
+  [IS_NEVER]: true,
+};
+
 export function validate<T>(schema: Schema, input: T) {
   function validateImpl(schema: unknown, input: unknown) {
-    if (typeof schema === "undefined") {
-      throw new Error("Validation error: Schema is undefined.");
+    if (typeof schema === "undefined" && typeof input !== "undefined") {
+      throw new Error(
+        `Validation error: Expected undefined but got ${typeof input}`,
+      );
     }
     if (isNull(schema)) {
       if (!isNull(input)) {
@@ -273,6 +323,11 @@ export function validate<T>(schema: Schema, input: T) {
         }
         return;
       }
+      if (isAny(schema)) return;
+      if (isUnknown(schema)) return;
+      if (isNever(schema)) {
+        throw new Error("Validation error: Expected never but got something");
+      }
       for (const [key, value] of Object.entries(schema)) {
         // @ts-ignore key now exists in input
         validateImpl(value, input[key]);
@@ -300,6 +355,6 @@ export function safeValidate<T extends object>(schema: Schema, input: T) {
   }
 }
 
-export function toProxy(schema: Schema, input: unknown, quiet = false) {
+export function schemaToProxy(schema: Schema, input: unknown, quiet = false) {
   return createDeepOnChangeProxy(input, schema, quiet);
 }
