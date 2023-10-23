@@ -1,6 +1,7 @@
 # Struct
 
-Struct is a utility library for defining and instantiating typed and prefilled Structs, as well as validating and asserting objects and primitives.
+![Struct](.github/banner.jpg)
+Struct is a Typescript utility library for defining and instantiating typed and prefilled Structs, as well as validating and asserting objects and primitives.
 
 # Usage
 
