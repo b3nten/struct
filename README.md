@@ -11,7 +11,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/freeCodeCamp/freeCodeCamp.svg?style=social&label=Star&maxAge=2592000)](https://github.com/freeCodeCamp/freeCodeCamp)
 [![NuGet stable version](https://badgen.net/nuget/v/newtonsoft.json)](https://nuget.org/packages/newtonsoft.json)
 
-*Struct is a Typescript utility library for defining and instantiating typed and prefilled Structs, as well as validating and asserting objects and primitives.
+*Struct is a Typescript utility library for defining and instantiating typed and prefilled Structs, as well as validating and asserting objects and primitives.*
 </div>
 
 ## Usage
