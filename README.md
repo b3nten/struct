@@ -1,11 +1,22 @@
-# Struct
+<div align="center">
+<br />
 
 ![Struct](.github/banner.jpg)
-Struct is a Typescript utility library for defining and instantiating typed and prefilled Structs, as well as validating and asserting objects and primitives.
 
-# Usage
+<h3>Struct 🧬</h3>
 
-## Struct
+#### Typescript struct factories and validation
+
+[![Npm package yearly downloads](https://badgen.net/npm/dy/express)](https://npmjs.com/package/express)
+[![GitHub stars](https://img.shields.io/github/stars/freeCodeCamp/freeCodeCamp.svg?style=social&label=Star&maxAge=2592000)](https://github.com/freeCodeCamp/freeCodeCamp)
+[![NuGet stable version](https://badgen.net/nuget/v/newtonsoft.json)](https://nuget.org/packages/newtonsoft.json)
+
+*Struct is a Typescript utility library for defining and instantiating typed and prefilled Structs, as well as validating and asserting objects and primitives.
+</div>
+
+## Usage
+
+### Struct
 
 Structs are factories for objects. You can instantiate a struct by either providing a type for an empty struct, the default values for a defaulted struct, or a type for the struct and default values for a partially pre-instantiated struct.
 
@@ -84,7 +95,7 @@ const tex = new Texture({
 });
 ```
 
-## Validated Struct (VStruct)
+### Validated Struct (VStruct)
 
 Validated Structs work similarly to Structs, but use a schema defined with regular Javascript and are validated on creation an  property assignment.
 
