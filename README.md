@@ -7,7 +7,7 @@ Struct is a Typescript utility library for defining and instantiating typed and 
 
 ## Struct
 
-Structs are factorys for objects. You can instantiate a struct by either providing a type for an empty struct, the default values for a defaulted struct, or a type for the struct and default values for a partially pre-instantiated struct.
+Structs are factories for objects. You can instantiate a struct by either providing a type for an empty struct, the default values for a defaulted struct, or a type for the struct and default values for a partially pre-instantiated struct.
 
 #### Basic usage
 
