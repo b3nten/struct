@@ -173,7 +173,7 @@ If you have a VStruct, you can infer it's type using the `InferVStructType` util
 ```typescript
 const Light = VStruct({
   position: {
-  x: Number, y: Number, z: Number,
+    x: Number, y: Number, z: Number,
   },
   intensity: Optional(Nullable(Number))
 });
