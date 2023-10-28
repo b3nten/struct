@@ -46,3 +46,18 @@ export function Struct<
     }
   };
 }
+
+const Vec2 = Struct({
+  x: 0,
+  y: 0,
+});
+
+const Vec3 = Struct({
+  x: 0,
+  y: 0,
+  z: 0,
+});
+
+const vec = new Vec2({ x: 1, y: 2 });
+
+console.log(vec instanceof Vec2)
